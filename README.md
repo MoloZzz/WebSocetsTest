@@ -1,2 +1,2 @@
 # WebSocetsTest
-Testing socet.io module. 
+Testing socket.io module. 
