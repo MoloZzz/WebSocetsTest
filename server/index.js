@@ -1,24 +1,39 @@
+const fs = require('fs');
 const express = require('express');
-const path = require('path');
+const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
 const port = 5555; 
-
-const app = express();
-
-app.use(express.json());
-app.use(express.static('public'));
-app.use(express.urlencoded({ extended: true }));
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/index.html'));
-});
-  
-app.post('/post', (req, res) => {
-  const data = req.body;
-  res.json({ message: 'Отримано POST-запит', data });
-});
-
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Сервер запущено на порті ${port}`);
 });
+
+
+const path = require('path');
+
+
+app.use(express.static(path.join(__dirname, '../client')));
+
+app.get('/', (req, res) => {
+  const filePath = path.join(__dirname, '../client/pages/index.html');
+  if (fs.existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    res.status(404).send('File not found');
+  }
+});
+
+
+const users = [];
+const connections = [];
+
+
+
+
+
+
+
+  
+
 
