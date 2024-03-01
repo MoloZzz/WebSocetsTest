@@ -1,3 +1,4 @@
+//molo
 const fs = require('fs');
 const express = require('express');
 const app = express();
@@ -38,12 +39,10 @@ io.sockets.on('connection',function(socket){
   socket.on('disconnect', function(){
     connections.slice(connections.indexOf(socket), 1);
     console.log('disconnected');
-
   });
 
   socket.on('send message', function(data){
     io.sockets.emit('add message',{msg: data.message, senderName: data.senderName, colorClass: data.colorClass});
-  
   });
 
 });
