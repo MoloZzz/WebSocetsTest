@@ -7,6 +7,7 @@ const io = require('socket.io')(server);
 const port = 5555; 
 server.listen(port, () => {
   console.log(`Сервер запущено на порті ${port}`);
+  console.log(`Server is running at http://localhost:${port}/`);
 });
 
 
@@ -27,6 +28,26 @@ app.get('/', (req, res) => {
 
 const users = [];
 const connections = [];
+
+
+io.sockets.on('connection',function(socket){
+  console.log('Connected');
+
+  connections.push(socket);
+
+  socket.on('disconnect', function(){
+    connections.slice(connections.indexOf(socket), 1);
+    console.log('disconnected');
+
+  });
+
+  socket.on('send message', function(data){
+    io.sockets.emit('add message',{msg: data.message, senderName: data.senderName, colorClass: data.colorClass});
+  
+  });
+
+});
+
 
 
 
