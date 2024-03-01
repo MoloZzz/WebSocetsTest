@@ -37,7 +37,7 @@
             <div class="container-fluid">
               <div class="row">
                   <div class="col-md-6">
-                      <form id="messForm" class="p-4">
+                      <form id="messageForm" class="p-4">
                           <div class="mb-3" style="text-align: left;">
                               <label for="senderName" class="form-label">Ім'я відправника:</label>
                               <input type="text" class="form-control" id="senderName" placeholder="Введіть ім'я">
@@ -49,8 +49,8 @@
                           <button type="submit" class="btn btn-primary align-self-end sendButton" >Надіслати</button>
                       </form>
                   </div>
-                  <div class="col-md-6">
-                      <div id="all_mess"></div>
+                  <div class="col-md-6" style="text-align: left;">
+                      <div id="all_messages"></div>
                   </div>
               </div>
             </div>
@@ -58,5 +58,63 @@
           </div> 
         </main>
       </div>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+      <script src="/socket.io/socket.io.js"></script>
+
+      <script>
+        let random = Math.floor(Math.random() * 7) + 1;
+        let alertClass;
+        switch(random){
+          case 1: 
+            alertClass = "primary";
+            break;
+          case 2: 
+            alertClass = "secondary";
+            break;
+          case 3: 
+            alertClass = "success";
+            break;
+          case 4: 
+            alertClass = "danger";
+            break;
+          case 5: 
+            alertClass = "warning";
+            break;
+          case 6: 
+            alertClass = "info";
+            break;
+          case 7: 
+            alertClass = "light";
+            break;
+          case 8: 
+            alertClass = "dark";
+            break;
+        }
+
+
+        $(function(){
+          const socket = io.connect();
+
+
+          const $form = $('#messageForm');
+          const $senderName = $('#senderName');
+          const $messageText = $('#messageText');
+          const $all_messages = $('#all_messages');
+
+          $form.submit(function(event){
+            event.preventDefault();
+            socket.emit('send message', {message: $messageText.val(), senderName: $senderName.val(), colorClass: alertClass});
+            $messageText.val('');
+          });
+
+          socket.on('add message', function(data){
+      
+            $all_messages.append("<div class = 'alert alert-" + data.colorClass + "'<b>" + data.senderName +  "</b>: " + data.msg + "</div>");
+
+          });
+
+        });
+      </script>
 </body>
 </html>

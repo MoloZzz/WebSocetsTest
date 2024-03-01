@@ -8,3 +8,8 @@ a{
 body{
 background-color: blue;
 }
+
+#all_messages {
+    height: 300px; 
+    overflow: auto; 
+  }
